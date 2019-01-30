@@ -1,0 +1,11 @@
+-- SHOWS FLEETWIDE LIST OF TECH_ACCTS HAVING MARINFLOC AS MAKER
+
+SELECT PLT.ObjClass_Name AS VESSEL
+		, FUNC.Function_Id AS TECH_ACCT
+		, FUNC.Function_Name AS TECH_ACCT_DESCR
+		, PLT_FUNC.PlantFUnc_Maker AS MAKER
+FROM ST_Function AS FUNC
+INNER JOIN ST_ObjectClass AS PLT ON PLT.ObjClass_Id = FUNC.FuncClass_Id 
+INNER JOIN ST_PlantFUnction AS PLT_FUNC ON PLT_FUNC.Function_Id = FUNC.Function_Id AND PLT_FUNC.Plant_Id = FUNC.FuncClass_Id
+WHERE PLT_FUNC.PlantFunc_Maker LIKE '%floc%'
+AND PLT.Rec_Deleted = 0 
