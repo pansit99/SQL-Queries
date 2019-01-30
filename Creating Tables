@@ -1,0 +1,12 @@
+  --CREATES A TABLE NAMED TBL_q88_obs HAVING TEN COLUMNS WITH RESPECTIVE NAMES AND DATATYPES
+  -- INSP_OBJECT_ID BEING THE PRIMARY KEY
+  CREATE TABLE TBL_q88_obs (INSP_OBJECT_ID numeric(18)  NOT NULL PRIMARY KEY
+                           ,VESSEL_NAME varchar(30) not null 
+                           ,INSP_BY varchar(30) not null
+                           ,INSPECTOR varchar(50) 
+                           ,INSPECTED_DATE datetime not null 
+                           ,PORT_NAME varchar(50) not null
+                           ,CHAPTER_NO varchar(10) null
+                           ,SECTION_NO varchar(10) null
+                           ,OBS_TYPE varchar(20) null
+                           ,INITIAL_RISK varchar(20) null);
