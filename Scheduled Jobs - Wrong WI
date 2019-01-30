@@ -1,0 +1,17 @@
+-- VIEW SCHEDULED JOBS LIST WITH ILLEGAL WORK INSTRUCTIONS (WHERE WP_PR_Object_Id == 320)
+
+SELECT WP.WP_Object_Id AS SJ_OBJ_ID
+			, OBJ_SJ.ObjClass_Id AS SJ_OWNER
+			, OBJ_SJ.Obj_Code AS SJ_CODE
+			, OBJ_SJ.Obj_Description AS SJ_DESCR
+			, WP.WP_PR_Object_Id AS WI_OBJ_ID
+			, OBJ_WI.Obj_Code AS WI_CODE
+			, OBJ_WI.ObjClass_Id AS WI_OWNER
+FROM ST_WorkPlan AS WP
+INNER JOIN ST_Object AS OBJ_SJ ON OBJ_SJ.Object_Id = WP.WP_Object_Id AND OBJ_SJ.ObjType_Id = 320
+INNER JOIN ST_Plant AS PLT ON PLT.Plant_Id = OBJ_SJ.ObjClass_Id
+LEFT OUTER JOIN ST_Object AS OBJ_WI ON OBJ_WI.Object_Id = WP.WP_PR_Object_Id
+WHERE OBJ_SJ.Rec_Deleted = 0
+	 AND OBJ_WI.ObjType_Id <> 310 
+	 AND PLT.Rec_Deleted = 0
+ORDER BY PLT.Plant_Name ASC ;
