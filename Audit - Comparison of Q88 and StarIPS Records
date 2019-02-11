@@ -1,0 +1,21 @@
+-- AUDIT FOR Q88 AND StarIPS Comparison of Inspections/Audits Records
+
+SELECT Q88.INSP_OBJECT_ID AS DB_OBJ_ID
+	 , Q88.VESSEL_NAME AS VESSEL
+	 , Q88.INSPECTED_DATE AS INSP_DATE_Q88
+	 , Q88.PORT_NAME AS PORT_Q88
+	 , Q88.TYPE AS INSP_TYPE_Q88
+	 , Q88.INSP_BY AS INSP_BY_Q88
+	 , STAR.AUD_CODE AS AUD_CODE_STAR
+	 , STAR.INSP_TYPE_DESCR AS AUD_DESCR_STAR
+	 , CASE WHEN Q88.INSPECTED_DATE = STAR.INSPECTED_DATE THEN 'YES' ELSE 'NO' END AS DATES_MATCH
+	 , STAR.INSPECTED_DATE AS AUD_DATE_STAR
+	 , STAR.PORT_NAME AS AUD_PORT_STAR
+	-- , STAR.INSP_TYPE_GENERIC AS AUD_TYPE_STAR
+	 , STAR.INSP_BY_DESCR AS AUD_BY_STAR
+FROM TBL_q88 AS Q88
+LEFT OUTER JOIN TBL_StarIPS_INSP AS STAR ON STAR.INSP_OBJECT_ID = Q88.INSP_OBJECT_ID
+WHERE YEAR(Q88.INSPECTED_DATE) >= 2018
+	AND Q88.INSPECTED_DATE <= GetDate()
+	AND Q88.VESSEL_NAME NOT IN ('Bow Asia', 'Bow Singapore', 'Bow Dalian', 'Bow Fuling', 'Bow Nangang', 'Bow Fuji', 'Bow Hector', 'Bow Guardian', 'Bow Neon', 'Bow Palladium', 'Bow Platinum', 'Bow Precision', 'Bow Titanium', 'Bow Tone', 'Bow Tungsten', 'Bristol Trader', 'Bow Performer', 'Stellar Wisteria', 'Stellar Orchid', 'Southern Shark', 'Southern Quokka', 'Southern Puma', 'Southern Owl', 'Southern Koala', 'Shamrock Mercury', 'SG Pegasus', 'Sagami', 'Rt Star', 'Moyra', 'Marex Noa', 'Horin Trader', 'Gwen', 'CTG Mercury', 'CTG Magnesium', 'CTG Cobalt', 'CTG Bismuth', 'CTG Argon', 'Celsius Mumbai', 'Celsius Mayfair', 'Celsius Manhattan', 'Bow Compass')
+	AND Q88.TYPE NOT IN ('MASTER''S VERIFICATION', 'MASTER''S NAVIGATIONAL AUDIT');
