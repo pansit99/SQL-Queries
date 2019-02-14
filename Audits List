@@ -30,7 +30,8 @@ SELECT AUD.Audit_Object_Id AS AUDIT_OBJ_ID
              WHEN CHARINDEX('Load', AUD_OPRN.AUDIT_VO_DESCR) > 0 THEN 'Load' 
              ELSE AUD_OPRN.AUDIT_VO_DESCR 
          END AS OPERATION 
-       , AUD.AUdit_Date AS INSP_DATE 
+       , AUD.Audit_Date AS INSP_DATE 
+       , CONVERT(varChar, YEAR(AUD.Audit_Date)) + '-' + CONVERT(varChar, MONTH(AUD.Audit_Date)) AS INSP_DATE_B
        , OBJ_PERSON.Obj_Code AS AUDIT_RESP_PERSON 
        , (SELECT COUNT(NC_Object_Id) AS NCCOUNT FROM ST_NonConformity WHERE Audit_Object_Id = AUD.Audit_Object_Id AND Rec_Deleted = 0) AS FINDINGS_COUNT 
  FROM ST_Audit AS AUD 
@@ -45,4 +46,4 @@ SELECT AUD.Audit_Object_Id AS AUDIT_OBJ_ID
     AND OBJ_CLS.ObjClass_Name NOT IN('Bow Asia', 'Bow Singapore', 'Bow Fuling', 'Bow Dalian', 'Bow Nangang', 'Bow Victor', 'Bow Aratu') 
     AND AUD.Rec_Deleted = 0 
     AND OBJ_AUD.Rec_Deleted = 0 
- ORDER BY VESSEL ASC, INSP_DATE ASC ";
+ ORDER BY VESSEL ASC, INSP_DATE ASC ;
