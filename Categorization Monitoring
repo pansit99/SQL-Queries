@@ -1,0 +1,25 @@
+SELECT PLT.Plant_Name AS 'VESSEL'
+		, F.Function_Id AS 'TECHNICAL ACCOUNT'
+		, F.Function_Name AS 'TECHNICAL ACCOUNT NAME'
+		, (SELECT COUNT(Object_Id)
+		   FROM ST_PlantFunctionObject 
+		   WHERE Function_Id = F.Function_Id 
+		   		AND Plant_Id = PLT.Plant_Id 
+				AND ObjType_Id = 320 
+				AND Rec_Deleted = 0) AS 'JOBS COUNT'
+		, T.Template_Descr AS 'TEMPLATE'
+		, (SELECT TechClass_Descr FROM ST_TechClass WHERE TechClass_Id = PF.TechClass_Id) AS 'MAIN GROUP'
+		, (SELECT TechType_Descr FROM ST_TechType WHERE TechType_Id = PF.TechType_Id) AS 'SUB GROUP'
+FROM ST_Function AS F
+	LEFT OUTER JOIN ST_PlantFunction AS PF ON PF.Function_Id = F.Function_Id AND PF.FuncClass_Id = F.FuncCLass_Id
+	LEFT OUTER JOIN ST_Plant AS PLT ON PLT.Plant_Id = PF.Plant_Id AND PLT.FuncClass_Id = F.FuncClass_Id
+	LEFT OUTER JOIN ST_Template AS T ON T.Template_Id = PF.Template_Id
+WHERE F.Rec_Deleted = 0
+	AND PLT.Rec_Deleted = 0 
+	AND (SELECT COUNT(Object_Id)
+		   FROM ST_PlantFunctionObject 
+		   WHERE Function_Id = F.Function_Id 
+		   		AND Plant_Id = PLT.Plant_Id 
+				AND ObjType_Id = 320 
+				AND Rec_Deleted = 0) > 0 
+ORDER BY 'VESSEL' ASC, 'TECHNICAL ACCOUNT' ASC;
