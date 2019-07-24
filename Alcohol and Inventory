@@ -1,0 +1,22 @@
+USE StarIPS
+SELECT PLT.Plant_Name AS VESSEL
+	  , PFO.Function_Id AS TECH_ACCT
+	  , PFO.Object_Id AS WO_OBJ_ID
+	  , CASE WHEN WH.WH_Object_Id IS NOT NULL 
+			THEN 'WH' 
+			ELSE 'WO' 
+		END AS WO_WH_TYPE
+	  , OBJ.Obj_Description AS WO_DESCR
+	  , WPD_DOC_OBJ.Object_Id AS FORM_OBJ_ID
+	  , WPD_DOC_OBJ.Obj_Code
+FROM ST_PlantFunctionObject AS PFO
+INNER JOIN ST_Object AS OBJ ON OBJ.Object_Id = PFO.Object_Id 
+	AND OBJ.ObjType_Id = 340
+LEFT OUTER JOIN ST_WorkHistory AS WH ON WH.WH_Object_Id = PFO.Object_Id
+INNER JOIN ST_Plant AS PLT ON PLT.Plant_Id = PFO.Plant_Id
+LEFT OUTER JOIN ST_WPDocument AS WPD ON WPD.WP_Object_Id = PFO.Object_Id 
+	LEFT OUTER JOIN ST_Object AS WPD_DOC_OBJ ON WPD_DOC_OBJ.Object_Id = WPD.Doc_Object_Id 
+		AND WPD_DOC_OBJ.ObjType_Id = 158
+WHERE PFO.Function_ID = '910'
+    AND OBJ.Obj_Description LIKE '%Alcohol%Inventory%Distribut%'
+ORDER BY PLT.Plant_Name ASC, OBJ.Rec_CreDate DESC;
